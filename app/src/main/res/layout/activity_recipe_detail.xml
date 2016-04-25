@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="recipe" type="me.martelli.lab.mybimby.recipes.Recipe"/>
+        <import type="me.martelli.lab.mybimby.recipes.RecipeUtils"/>
+    </data>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="?android:attr/actionBarSize">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    app:src="@{recipe.getImage()}"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/recipe_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"/>
+
+                <TextView
+                    android:text="@{recipe.getName()}"
+                    android:id="@+id/recipe_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/recipe_image"
+                    android:padding="16dp"
+                    android:background="@color/colorAccent"
+                    android:textAppearance="@style/TextAppearance.Title"/>
+
+                <LinearLayout
+                    android:id="@+id/recipe_ingredients_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@id/recipe_name"/>
+
+            </RelativeLayout>
+        </ScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_share_black_24dp"
+            app:layout_anchor="@id/recipe_name"
+            app:layout_anchorGravity="bottom|right|end"
+            app:backgroundTint="#FFFFFF"
+            android:tint="@color/colorAccent"/>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
