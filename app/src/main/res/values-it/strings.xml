@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My Bimby</string>
+    <string name="recipe_list">Lista delle Ricette</string>
+
+    <string name="recipe_image">recipe_image</string>
+    <string name="recipe_name">recipe_name</string>
+
+    <string name="ingredients">Ingredienti</string>
+    <string name="utensils">Utensili</string>
+    <string name="variants">Varianti</string>
+    <string name="advices">Consigli</string>
+    <string name="steps">Passaggi</string>
+    <string name="share_recipe">Condividi la ricetta con …</string>
+</resources>
