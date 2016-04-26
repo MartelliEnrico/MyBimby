@@ -14,11 +14,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import me.martelli.lab.mybimby.recipes.BaseInfo;
 import me.martelli.lab.mybimby.recipes.Recipe;
 import me.martelli.lab.mybimby.recipes.RecipeListAdapter;
 import me.martelli.lab.mybimby.recipes.RecipeUtils;
@@ -73,10 +75,11 @@ public class RecipeListActivity extends AppCompatActivity {
                         ViewCompat.setTransitionName(imageView, imageTransitionName);
                         ViewCompat.setTransitionName(textView, textTransitionName);
 
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                RecipeListActivity.this,
-                                new Pair<>(imageView, imageTransitionName),
-                                new Pair<>(textView, textTransitionName));
+                        Pair<View, String> p1 = Pair.create(imageView, imageTransitionName);
+                        Pair<View, String> p2 = Pair.create(textView, textTransitionName);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.
+                                makeSceneTransitionAnimation(RecipeListActivity.this, p1, p2);
 
                         startActivity(intent, options.toBundle());
                     } else {
@@ -104,5 +107,10 @@ public class RecipeListActivity extends AppCompatActivity {
     public static void setImageUrl(ImageView view, String url) {
         int width = view.getContext().getResources().getDisplayMetrics().widthPixels;
         Picasso.with(view.getContext()).load(url).resize(width, 0).into(view);
+    }
+
+    @BindingAdapter("bind:difficulty")
+    public static void setImageUrl(TextView view, @BaseInfo.Difficulty int difficulty) {
+        view.setText(RecipeUtils.formatDifficulty(view.getContext(), difficulty));
     }
 }
