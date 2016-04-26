@@ -15,4 +15,8 @@
     <string name="difficulty_medium">Medio</string>
     <string name="difficulty_hard">Difficile</string>
     <string name="difficulty_undefined">Non definita</string>
+
+    <string name="ms_prev">INDIETRO</string>
+    <string name="ms_next">AVANTI</string>
+    <string name="ms_end">FINE</string>
 </resources>
