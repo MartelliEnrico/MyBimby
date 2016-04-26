@@ -11,4 +11,8 @@
     <string name="advices">Consigli</string>
     <string name="steps">Passaggi</string>
     <string name="share_recipe">Condividi la ricetta con …</string>
+    <string name="difficulty_easy">Facile</string>
+    <string name="difficulty_medium">Medio</string>
+    <string name="difficulty_hard">Difficile</string>
+    <string name="difficulty_undefined">Non definita</string>
 </resources>

@@ -2,6 +2,7 @@ package me.martelli.lab.mybimby.recipes;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
@@ -121,10 +122,10 @@ public class RecipeUtils {
 
     public static String formatDifficulty(@BaseInfo.Difficulty int difficulty) {
         switch (difficulty) {
-            case BaseInfo.DIFFICULTY_EASY: return "Easy";
-            case BaseInfo.DIFFICULTY_MEDIUM: return "Medium";
-            case BaseInfo.DIFFICULTY_HARD: return "Hard";
-            default: return "Undefined";
+            case BaseInfo.DIFFICULTY_EASY: return Resources.getSystem().getString(R.string.difficulty_easy);
+            case BaseInfo.DIFFICULTY_MEDIUM: return Resources.getSystem().getString(R.string.difficulty_medium);
+            case BaseInfo.DIFFICULTY_HARD: return Resources.getSystem().getString(R.string.difficulty_hard);
+            default: return Resources.getSystem().getString(R.string.difficulty_undefined);
         }
     }
 

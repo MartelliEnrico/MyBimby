@@ -11,4 +11,8 @@
     <string name="advices">Advices</string>
     <string name="steps">Steps</string>
     <string name="share_recipe">Share recipe with …</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="difficulty_undefined">Undefined</string>
 </resources>
