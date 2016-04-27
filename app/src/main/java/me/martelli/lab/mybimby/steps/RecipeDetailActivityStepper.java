@@ -1,7 +1,6 @@
 package me.martelli.lab.mybimby.steps;
 
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.view.MenuItem;
 
 import com.github.fcannizzaro.materialstepper.style.ProgressStepper;
@@ -32,8 +31,6 @@ public class RecipeDetailActivityStepper extends ProgressStepper {
         setColorPrimary(R.color.colorAccent);
 
         super.onCreate(savedInstanceState);
-
-        ActivityCompat.postponeEnterTransition(this);
     }
 
     @Override

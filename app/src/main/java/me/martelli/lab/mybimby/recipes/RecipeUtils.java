@@ -5,22 +5,22 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 
 import com.commonsware.cwac.provider.StreamProvider;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
 import me.martelli.lab.mybimby.R;
 
 public class RecipeUtils {
+    private static Uri getUri(String image) {
+        return Uri.parse("file:///android_asset/" + image);
+    }
+
     public static List<Recipe> getDummyRecipes() {
         return Arrays.asList(
-                new Recipe.Builder("Ciambella della nonna", "file:///android_asset/images/ciambella.jpg")
+                new Recipe.Builder("Ciambella della nonna", getUri("images/ciambella.jpg"))
                         .setBaseInfo(10, 40, BaseInfo.DIFFICULTY_MEDIUM, 1)
                         .addIngredientsBlock("350 g di farina 00 + q.b.",
                                 "300 g di zucchero semolato + q.b.", "1 bustina di lievito per dolci",
@@ -42,7 +42,7 @@ public class RecipeUtils {
                         .addVariant("Per una versione dietetica, mettere 200 g di zucchero e 2 uova, " +
                                 "e un po' più di latte.")
                         .build(),
-                new Recipe.Builder("Gnocchi di patate", "file:///android_asset/images/gnocchi.jpg")
+                new Recipe.Builder("Gnocchi di patate", getUri("images/gnocchi.jpg"))
                         .setBaseInfo(40, 75, BaseInfo.DIFFICULTY_MEDIUM, 6)
                         .addIngredientsBlock("50 g di Parmigiano reggiano a pezzi (3 cm)",
                                 "800 g di patate farinose a fette", "1000 g di acqua",
@@ -88,18 +88,6 @@ public class RecipeUtils {
                                 "aumentando il quantitativo totale di farina a 400 g.")
                         .build()
         );
-    }
-
-    public static String toJson(List<Recipe> recipes) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Recipe>>() {}.getType();
-        return gson.toJson(recipes, type);
-    }
-
-    public static List<Recipe> fromJson(String json) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Recipe>>() {}.getType();
-        return gson.fromJson(json, type);
     }
 
     public static String formatMinutes(int minutes) {
@@ -167,25 +155,23 @@ public class RecipeUtils {
 
         text += "<br>\n#mybimby";
 
-        Spanned html = Html.fromHtml(text);
-
-        String image = recipe.getImage();
-        String base = "file:///android_asset/images/";
-
-        Uri stream = Uri.parse("content://me.martelli.lab.mybimby").buildUpon()
-                .appendPath(StreamProvider.getUriPrefix("me.martelli.lab.mybimby"))
-                .appendPath("assets/" + TextUtils.substring(image, base.length(), image.length()))
-                .build();
-
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, recipe.getName());
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, html.toString());
-        sharingIntent.putExtra(Intent.EXTRA_HTML_TEXT, html);
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, stream);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(text).toString());
+        sharingIntent.putExtra(Intent.EXTRA_HTML_TEXT, text);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, convertUri(recipe.getImage()));
         sharingIntent.setType("text/plain");
         sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         return sharingIntent;
+    }
+
+    private static Uri convertUri(Uri uri) {
+        return Uri.parse("content://me.martelli.lab.mybimby")
+                .buildUpon()
+                .appendPath(StreamProvider.getUriPrefix("me.martelli.lab.mybimby"))
+                .appendPath("assets/" + uri.getLastPathSegment())
+                .build();
     }
 
     private static String appendText(List<String> list, String title) {

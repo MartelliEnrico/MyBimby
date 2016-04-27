@@ -5,8 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +20,7 @@ import com.github.fcannizzaro.materialstepper.AbstractStep;
 import java.util.List;
 
 import me.martelli.lab.mybimby.R;
+import me.martelli.lab.mybimby.RecipeListActivity;
 import me.martelli.lab.mybimby.databinding.ActivityRecipeDetailBinding;
 import me.martelli.lab.mybimby.recipes.IngredientsList;
 import me.martelli.lab.mybimby.recipes.Recipe;
@@ -66,11 +65,6 @@ public class InfoStep extends AbstractStep implements OnFocusListenable {
 
         imageView = (ImageView) rootView.findViewById(R.id.recipe_image);
         textView = (TextView) rootView.findViewById(R.id.recipe_name);
-
-        ViewCompat.setTransitionName(imageView, getString(R.string.recipe_image));
-        ViewCompat.setTransitionName(textView, getString(R.string.recipe_name));
-
-        ActivityCompat.startPostponedEnterTransition(getActivity());
 
         int width = getResources().getDisplayMetrics().widthPixels;
         imageView.setMaxHeight(width * 2 / 3);

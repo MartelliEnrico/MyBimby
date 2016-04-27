@@ -1,12 +1,14 @@
 package me.martelli.lab.mybimby.recipes;
 
+import android.net.Uri;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Recipe {
     private String name;
-    private String image;
+    private Uri image;
     private BaseInfo info;
     private List<IngredientsList> ingredientsBlocks;
     private List<String> utensils;
@@ -14,7 +16,7 @@ public class Recipe {
     private List<String> advices;
     private List<String> variants;
 
-    private Recipe(String name, String image, BaseInfo info, List<IngredientsList> ingredientsBlocks,
+    private Recipe(String name, Uri image, BaseInfo info, List<IngredientsList> ingredientsBlocks,
                   List<String> utensils, List<StepsList> stepsBlocks, List<String> advices,
                   List<String> variants) {
         this.name = name;
@@ -29,7 +31,7 @@ public class Recipe {
 
     public static class Builder {
         private String name;
-        private String image;
+        private Uri image;
         private BaseInfo info;
         private List<IngredientsList> ingredientsBlocks = new LinkedList<>();
         private List<String> utensils = new LinkedList<>();
@@ -37,7 +39,7 @@ public class Recipe {
         private List<String> advices = new LinkedList<>();
         private List<String> variants = new LinkedList<>();
 
-        public Builder(String name, String image) {
+        public Builder(String name, Uri image) {
             this.name = name;
             this.image = image;
         }
@@ -131,7 +133,7 @@ public class Recipe {
         return name;
     }
 
-    public String getImage() {
+    public Uri getImage() {
         return image;
     }
 

@@ -33,6 +33,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
         actionBar.setTitle(null);
@@ -48,7 +49,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         assert textView != null;
 
         ViewCompat.setTransitionName(imageView, getString(R.string.recipe_image));
-        ViewCompat.setTransitionName(textView, getString(R.string.recipe_name));
 
         int width = getResources().getDisplayMetrics().widthPixels;
         imageView.setMaxHeight(width * 2 / 3);

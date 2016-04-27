@@ -2,10 +2,11 @@ package me.martelli.lab.mybimby;
 
 import android.content.Intent;
 import android.databinding.BindingAdapter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,42 +19,31 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import me.martelli.lab.mybimby.recipes.BaseInfo;
-import me.martelli.lab.mybimby.recipes.Recipe;
 import me.martelli.lab.mybimby.recipes.RecipeListAdapter;
 import me.martelli.lab.mybimby.recipes.RecipeUtils;
 import me.martelli.lab.mybimby.steps.RecipeDetailActivityStepper;
 import me.martelli.lab.mybimby.util.RecyclerItemClickListener;
 
 public class RecipeListActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-
-    private List<Recipe> recipes;
-    private View imageView, textView;
+    private View imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
+
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_recipe_list);
 
-        recipes = RecipeUtils.getDummyRecipes();
+        setupToolbar();
+        setupRecyclerView();
+    }
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setElevation(0);
-        actionBar.setTitle(R.string.recipe_list);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recipe_recycler_view);
-        layoutManager = new LinearLayoutManager(this);
-        adapter = new RecipeListAdapter(recipes);
+    private void setupRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recipe_recycler_view);
+        assert recyclerView != null;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        RecyclerView.Adapter adapter = new RecipeListAdapter(RecipeUtils.getDummyRecipes());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -64,22 +54,16 @@ public class RecipeListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent intent = new Intent(RecipeListActivity.this, RecipeDetailActivityStepper.class);
-                    intent.putExtra(RecipeDetailActivity.RECIPE_EXTRA, position);
+                    intent.putExtra(RecipeDetailActivityStepper.RECIPE_EXTRA, position);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         imageView = view.findViewById(R.id.info_image);
-                        textView = view.findViewById(R.id.info_text);
                         String imageTransitionName = getString(R.string.recipe_image);
-                        String textTransitionName = getString(R.string.recipe_name);
 
                         ViewCompat.setTransitionName(imageView, imageTransitionName);
-                        ViewCompat.setTransitionName(textView, textTransitionName);
-
-                        Pair<View, String> p1 = Pair.create(imageView, imageTransitionName);
-                        Pair<View, String> p2 = Pair.create(textView, textTransitionName);
 
                         ActivityOptionsCompat options = ActivityOptionsCompat.
-                                makeSceneTransitionAnimation(RecipeListActivity.this, p1, p2);
+                                makeSceneTransitionAnimation(RecipeListActivity.this, imageView, imageTransitionName);
 
                         startActivity(intent, options.toBundle());
                     } else {
@@ -90,27 +74,41 @@ public class RecipeListActivity extends AppCompatActivity {
         );
     }
 
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setElevation(0);
+        actionBar.setTitle(R.string.recipe_list);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && imageView != null) {
             ViewCompat.setTransitionName(imageView, null);
-            ViewCompat.setTransitionName(textView, null);
-
             imageView = null;
-            textView = null;
         }
     }
 
     @BindingAdapter("bind:src")
-    public static void setImageUrl(ImageView view, String url) {
+    public static void setImageUrl(ImageView view, Uri image) {
         int width = view.getContext().getResources().getDisplayMetrics().widthPixels;
-        Picasso.with(view.getContext()).load(url).resize(width, 0).into(view);
+        Picasso.with(view.getContext()).load(image).resize(width, 0).into(view);
     }
 
     @BindingAdapter("bind:difficulty")
-    public static void setImageUrl(TextView view, @BaseInfo.Difficulty int difficulty) {
+    public static void setDifficulty(TextView view, @BaseInfo.Difficulty int difficulty) {
         view.setText(RecipeUtils.formatDifficulty(view.getContext(), difficulty));
+    }
+
+    @BindingAdapter("bind:setTransitionName")
+    public static void setTransitionName(ImageView view, @StringRes int name) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setTransitionName(view.getResources().getString(name));
+        }
     }
 }
