@@ -94,7 +94,7 @@ public class RecipeListActivity extends AppCompatActivity {
     @BindingAdapter("bind:src")
     public static void setImageUrl(ImageView view, Uri image) {
         int width = view.getContext().getResources().getDisplayMetrics().widthPixels;
-        Picasso.with(view.getContext()).load(image).resize(width, 0).onlyScaleDown().into(view);
+        Picasso.with(view.getContext()).load(image).resize(width, 0).into(view);
     }
 
     @BindingAdapter("bind:difficulty")
