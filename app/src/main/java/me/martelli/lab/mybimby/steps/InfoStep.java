@@ -2,6 +2,7 @@ package me.martelli.lab.mybimby.steps;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +22,6 @@ import com.github.fcannizzaro.materialstepper.AbstractStep;
 import java.util.List;
 
 import me.martelli.lab.mybimby.R;
-import me.martelli.lab.mybimby.RecipeListActivity;
 import me.martelli.lab.mybimby.databinding.ActivityRecipeDetailBinding;
 import me.martelli.lab.mybimby.recipes.IngredientsList;
 import me.martelli.lab.mybimby.recipes.Recipe;
@@ -65,6 +66,18 @@ public class InfoStep extends AbstractStep implements OnFocusListenable {
 
         imageView = (ImageView) rootView.findViewById(R.id.recipe_image);
         textView = (TextView) rootView.findViewById(R.id.recipe_name);
+
+        imageView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().startPostponedEnterTransition();
+                        }
+                        return true;
+                    }
+                });
 
         int width = getResources().getDisplayMetrics().widthPixels;
         imageView.setMaxHeight(width * 2 / 3);

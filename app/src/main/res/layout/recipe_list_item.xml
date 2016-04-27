@@ -32,8 +32,7 @@
                     android:scaleType="centerCrop"
                     android:id="@+id/info_image"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:contentDescription="@{recipe.getName()}"/>
+                    android:layout_height="180dp"/>
 
                 <TextView
                     android:id="@+id/info_text"
@@ -47,7 +46,6 @@
                     android:ellipsize="end"/>
 
                 <LinearLayout
-                    android:visibility="@{recipe.getInfo() != null ? View.VISIBLE : View.GONE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

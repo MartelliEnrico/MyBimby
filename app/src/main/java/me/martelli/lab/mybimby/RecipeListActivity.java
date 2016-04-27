@@ -58,14 +58,11 @@ public class RecipeListActivity extends AppCompatActivity {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         imageView = view.findViewById(R.id.info_image);
-                        String imageTransitionName = getString(R.string.recipe_image);
+                        imageView.setTransitionName(getString(R.string.recipe_image));
 
-                        ViewCompat.setTransitionName(imageView, imageTransitionName);
-
-                        ActivityOptionsCompat options = ActivityOptionsCompat.
-                                makeSceneTransitionAnimation(RecipeListActivity.this, imageView, imageTransitionName);
-
-                        startActivity(intent, options.toBundle());
+                        startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                RecipeListActivity.this, imageView, imageView.getTransitionName())
+                                .toBundle());
                     } else {
                         startActivity(intent);
                     }
@@ -97,7 +94,7 @@ public class RecipeListActivity extends AppCompatActivity {
     @BindingAdapter("bind:src")
     public static void setImageUrl(ImageView view, Uri image) {
         int width = view.getContext().getResources().getDisplayMetrics().widthPixels;
-        Picasso.with(view.getContext()).load(image).resize(width, 0).into(view);
+        Picasso.with(view.getContext()).load(image).resize(width, 0).onlyScaleDown().into(view);
     }
 
     @BindingAdapter("bind:difficulty")
