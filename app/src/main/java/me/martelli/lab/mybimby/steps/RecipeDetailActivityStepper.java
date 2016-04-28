@@ -1,6 +1,5 @@
 package me.martelli.lab.mybimby.steps;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -17,10 +16,6 @@ public class RecipeDetailActivityStepper extends ProgressStepper {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            postponeEnterTransition();
-        }
-
         int position = getIntent().getIntExtra(RECIPE_EXTRA, -1);
         Recipe recipe = RecipeUtils.getDummyRecipes().get(position);
 
@@ -29,7 +24,8 @@ public class RecipeDetailActivityStepper extends ProgressStepper {
         for(int i = 0, n = recipe.getStepsBlocks().size(); i < n; i++) {
             StepsList stepsList = recipe.getStepsBlocks().get(i);
             for(int j = 0, m = stepsList.getSteps().size(); j < m; j++) {
-                addStep(StepsBlockStep.newInstance(position, i, j, m));
+                addStep(StepsBlockStep.newInstance(
+                        stepsList.getTitle(), stepsList.getSteps().get(j), j, m));
             }
         }
 

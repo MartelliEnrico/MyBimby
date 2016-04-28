@@ -13,20 +13,20 @@ import android.widget.TextView;
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 
 import me.martelli.lab.mybimby.R;
-import me.martelli.lab.mybimby.recipes.Recipe;
 import me.martelli.lab.mybimby.recipes.RecipeUtils;
-import me.martelli.lab.mybimby.recipes.StepsList;
 
 public class StepsBlockStep extends AbstractStep {
-    private static final String ARG_RECIPE = "recipe_position";
+    private static final String ARG_TITLE = "recipe_step_title";
     private static final String ARG_STEP = "recipe_step";
     private static final String ARG_STEP_POS = "recipe_step_pos";
     private static final String ARG_STEP_TOTAL = "recipe_step_total";
 
-    public static StepsBlockStep newInstance(int position, int blockPosition, int stepPosition, int totalBlocks) {
+    public static StepsBlockStep newInstance(@Nullable String title, String step, int stepPosition, int totalBlocks) {
         Bundle args = new Bundle();
-        args.putInt(ARG_RECIPE, position);
-        args.putInt(ARG_STEP, blockPosition);
+        if(title != null) {
+            args.putString(ARG_TITLE, title);
+        }
+        args.putString(ARG_STEP, step);
         args.putInt(ARG_STEP_POS, stepPosition);
         args.putInt(ARG_STEP_TOTAL, totalBlocks);
         StepsBlockStep fragment = new StepsBlockStep();
@@ -52,21 +52,14 @@ public class StepsBlockStep extends AbstractStep {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
 
-        Recipe recipe = RecipeUtils.getDummyRecipes().get(getArguments().getInt(ARG_RECIPE));
-
-        StepsList stepList = recipe.getStepsBlocks().get(getArguments().getInt(ARG_STEP));
-
-        String title = stepList.getTitle();
-        if(title == null) {
-            title = getString(R.string.steps);
-        }
+        String title = getArguments().getString(ARG_TITLE, getString(R.string.steps));
         int current = getArguments().getInt(ARG_STEP_POS);
         int total = getArguments().getInt(ARG_STEP_TOTAL);
         actionBar.setTitle(title + " (" + (current + 1) + "/" + total + ")");
 
         TextView textView = (TextView) rootView.findViewById(R.id.recipe_step);
         assert textView != null;
-        textView.setText(RecipeUtils.formatHtml(stepList.getSteps().get(current)));
+        textView.setText(RecipeUtils.formatHtml(getArguments().getString(ARG_STEP)));
 
         return rootView;
     }

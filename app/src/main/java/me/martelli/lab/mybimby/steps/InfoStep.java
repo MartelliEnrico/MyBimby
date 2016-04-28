@@ -2,7 +2,6 @@ package me.martelli.lab.mybimby.steps;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,14 +50,7 @@ public class InfoStep extends AbstractStep implements OnFocusListenable {
         ActivityRecipeDetailBinding binding = DataBindingUtil.inflate(inflater, R.layout.activity_recipe_detail, container, false);
         View rootView = binding.getRoot();
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
-        actionBar.setTitle(null);
+        setupToolbar(rootView);
 
         final Recipe recipe = RecipeUtils.getDummyRecipes().get(getArguments().getInt(ARG_RECIPE));
         binding.setRecipe(recipe);
@@ -67,21 +58,29 @@ public class InfoStep extends AbstractStep implements OnFocusListenable {
         imageView = (ImageView) rootView.findViewById(R.id.recipe_image);
         textView = (TextView) rootView.findViewById(R.id.recipe_name);
 
-        imageView.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        imageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            getActivity().startPostponedEnterTransition();
-                        }
-                        return true;
-                    }
-                });
-
         int width = getResources().getDisplayMetrics().widthPixels;
         imageView.setMaxHeight(width * 2 / 3);
 
+        setupLinearLayout(inflater, rootView, recipe);
+
+        setupFab(rootView, recipe);
+
+        return rootView;
+    }
+
+    private void setupFab(View rootView, final Recipe recipe) {
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(Intent.createChooser(
+                        RecipeUtils.shareRecipe(getActivity(), recipe),
+                        getString(R.string.share_recipe)));
+            }
+        });
+    }
+
+    private void setupLinearLayout(LayoutInflater inflater, View rootView, Recipe recipe) {
         LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.recipe_ingredients_list);
         assert linearLayout != null;
 
@@ -105,16 +104,17 @@ public class InfoStep extends AbstractStep implements OnFocusListenable {
         if(recipe.getVariants().size() != 0) {
             addRecipeSection(recipe.getVariants(), getString(R.string.variants), inflater, linearLayout);
         }
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(Intent.createChooser(RecipeUtils.shareRecipe(getActivity(), recipe), getString(R.string.share_recipe)));
-            }
-        });
+    private void setupToolbar(View rootView) {
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        return rootView;
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+        actionBar.setTitle(null);
     }
 
     private void addRecipeSection(List<String> list, String title, LayoutInflater inflater, LinearLayout linearLayout) {
