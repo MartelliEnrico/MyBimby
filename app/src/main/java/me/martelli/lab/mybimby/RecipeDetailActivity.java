@@ -17,6 +17,7 @@ import me.martelli.lab.mybimby.recipes.IngredientsList;
 import me.martelli.lab.mybimby.recipes.Recipe;
 import me.martelli.lab.mybimby.recipes.RecipeUtils;
 
+@Deprecated
 public class RecipeDetailActivity extends AppCompatActivity {
     public final static String RECIPE_EXTRA = "recipe_extra";
 
